@@ -137,5 +137,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
 
 (MAPC 'FMAKUNBOUND '(boot writefile openfile))
 
-(SAVE-LISP-AND-DIE "Shen.exe" :EXECUTABLE T :TOPLEVEL 'shen.shen)
 
+(REQUIRE :sb-posix)
+
+(DEFUN is-sbcl-arg-prefix (X) ; TODO: improve this
+  (LET ((Index (STRING< "--" X)))
+       (AND Index (= Index 2))))
+
+(DEFUN entry-point ()
+  (HANDLER-CASE
+   (shen.shen (REMOVE-IF 'is-sbcl-arg-prefix
+                         (CDR SB-EXT:*POSIX-ARGV*)))
+   (SB-SYS:INTERACTIVE-INTERRUPT ()
+        (SB-EXT:QUIT))))
+
+
+(SB-EXT:DISABLE-DEBUGGER)
+(SB-EXT:GC :FULL T)
+
+(SAVE-LISP-AND-DIE "Shen.exe" :EXECUTABLE T :TOPLEVEL 'entry-point)

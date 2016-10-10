@@ -23,7 +23,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
 
-(defun shen.shen () (do (shen.credits) (shen.loop)))
+
+(defun shen.shen (V1178) (cond ((= () V1178) (do (set *system-argv* ()) (do (shen.credits) (shen.loop)))) (true (trap-error (do (set *system-argv* V1178) (do (set *hush* true) (shen.batch-mode V1178))) (lambda E (pr (error-to-string E) (stoutput)))))))
+
+(defun shen.batch-mode (V1180) (cond ((and (cons? V1180) (= "-t" (hd V1180))) (do (if (value shen.*tc*) (tc -) (tc +)) (shen.batch-mode (tl V1180)))) ((and (cons? V1180) (and (= "-e" (hd V1180)) (cons? (tl V1180)))) (let Read (read-from-string (hd (tl V1180))) (let Eval (shen.toplevel_evaluate Read (value shen.*tc*)) (let Show (shen.app Eval "
+" shen.s) (do (pr Show (stoutput)) (shen.batch-mode (tl (tl V1180)))))))) ((and (cons? V1180) (and (= "-l" (hd V1180)) (cons? (tl V1180)))) (do (load (hd (tl V1180))) (shen.batch-mode (tl (tl V1180))))) ((cons? V1180) (pr "usage: [-t] [-e string] [-l filename]" (stoutput))) ((= () V1180) ()) (true (shen.f_error shen.batch-mode))))
 
 (defun shen.loop () (do (shen.initialise_environment) (do (shen.prompt) (do (trap-error (shen.read-evaluate-print) (lambda E (pr (error-to-string E) (stoutput)))) (shen.loop)))))
 
@@ -105,6 +109,3 @@ port " (shen.app (value *port*) (cn " ported by " (shen.app (value *porters*) "
 (defun shen.extract-pvars (V15689) (cond ((shen.pvar? V15689) (cons V15689 ())) ((cons? V15689) (union (shen.extract-pvars (hd V15689)) (shen.extract-pvars (tl V15689)))) (true ())))
 
 (defun shen.mult_subst (V15697 V15698 V15699) (cond ((= () V15697) V15699) ((= () V15698) V15699) ((and (cons? V15697) (cons? V15698)) (shen.mult_subst (tl V15697) (tl V15698) (subst (hd V15697) (hd V15698) V15699))) (true (shen.f_error shen.mult_subst))))
-
-
-

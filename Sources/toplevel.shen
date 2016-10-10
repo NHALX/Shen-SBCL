@@ -28,10 +28,46 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.c#34;
 
 *\
 
-(package shen []
+(package shen [*system-argv*]
 
 (define shen 
-  -> (do (credits) (loop)))
+
+  [] -> (do
+         (set *system-argv* [])
+         (credits)
+         (loop))
+
+  XS -> (trap-error
+         (do
+          (set *system-argv* XS)
+          (set *hush* true)
+          (batch-mode XS))
+         (/. E (pr (error-to-string E) (stoutput)))))
+
+
+
+(define batch-mode
+
+  ["-t" | XS] -> (do (if (value *tc*)
+                         (tc -)
+                         (tc +))
+                     (batch-mode XS))
+
+  ["-e" X | XS] -> (let
+                       Read (read-from-string X)
+                       Eval (toplevel_evaluate Read (value *tc*))
+                       Show (make-string "~S~%" Eval)
+                     (do
+                      (pr Show)
+                      (batch-mode XS)))
+
+  ["-l" X | XS] -> (do
+                    (load X)
+                    (batch-mode XS))
+
+  [X | XS] -> (pr "usage: [-t] [-e string] [-l filename]")
+  []       -> ())
+
 
 (define loop
    -> (do (initialise_environment)
