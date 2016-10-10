@@ -1,0 +1,36 @@
+About Shen
+__________
+
+Shen is a next generation Functional Language that runs under many platforms; including Common Lisp, Scheme, Javascript, Clojure and Python.  Shen is under a 3 clause BSD license.  Please look at license.pdf for a full understanding of BSD, copyright and licensing.
+
+Ports derived from Shen and conformant to the standard tests for testing Shen ports are listed in the downloads section of the Shen website www.shenlanguage.org along with their certification.  We recommend using certified ports since these are most likely to be conformant to our motto of 'write once, run anywhere'.  Please look at certification.pdf for details of how to get certification.
+
+Documentation
+_____________
+
+Read the file intro.doc in doc to learn Shen.
+
+
+Installing Shen
+_______________
+
+Shen is compiled into a Lisp called KLambda.  Shen is bootstrapped - written 100% in Shen.  To install from scratch - copy the latest Shen into the folder Sources and type (load "make.shen").  Then type
+
+(make)
+
+You will generate a pile of KLambda (.kl) files.  Move these files into the KLambda folder at the top level.
+
+Alternatively you can just use the KLambda files that are already there.
+
+To compile the KLambda you need to decide the platform you are using.  The default platform that comes with these sources is Common Lisp.  Copy the KLambda sources into the folder of your choice - either Platforms/SBCL or Platforms/CLisp.  Put your executable CLisp/SBCL into this folder, enter it and type
+
+(load "install.lsp")
+
+to build your Shen image.  This process has been tested under Windows 7.
+
+For technical questions - visit https://groups.google.com/forum/?hl=en#!forum/qilang.
+
+Happy programming.
+
+Mark Tarver
+28-4-15

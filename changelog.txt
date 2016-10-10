@@ -1,0 +1,2 @@
+* Mon Oct 10 04:18:02 DST 2016:
+	Neal Alexander <nhalxr@gmail.com> becomes maintainer.
