@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
 (defun shen.shen (V1178) (cond ((= () V1178) (do (set *system-argv* ()) (do (shen.credits) (shen.loop)))) (true (trap-error (do (set *system-argv* V1178) (do (set *hush* true) (shen.batch-mode V1178))) (lambda E (pr (error-to-string E) (stoutput)))))))
 
 (defun shen.batch-mode (V1180) (cond ((and (cons? V1180) (= "-t" (hd V1180))) (do (if (value shen.*tc*) (tc -) (tc +)) (shen.batch-mode (tl V1180)))) ((and (cons? V1180) (and (= "-e" (hd V1180)) (cons? (tl V1180)))) (let Read (read-from-string (hd (tl V1180))) (let Eval (shen.toplevel_evaluate Read (value shen.*tc*)) (let Show (shen.app Eval "
-" shen.s) (do (pr Show (stoutput)) (shen.batch-mode (tl (tl V1180)))))))) ((and (cons? V1180) (and (= "-l" (hd V1180)) (cons? (tl V1180)))) (do (load (hd (tl V1180))) (shen.batch-mode (tl (tl V1180))))) ((cons? V1180) (pr "usage: [-t] [-e string] [-l filename]" (stoutput))) ((= () V1180) ()) (true (shen.f_error shen.batch-mode))))
+" shen.s) (do (pr Show (stoutput)) (shen.batch-mode (tl (tl V1180)))))))) ((and (cons? V1180) (and (= "-l" (hd V1180)) (cons? (tl V1180)))) (do (cd (PATH-DIRECTORY (hd (tl V1180)))) (do (load (PATH-FILENAME (hd (tl V1180)))) (shen.batch-mode (tl (tl V1180)))))) ((cons? V1180) (pr "usage: [-t] [-e string] [-l filename]" (stoutput))) ((= () V1180) ()) (true (shen.f_error shen.batch-mode))))
 
 (defun shen.loop () (do (shen.initialise_environment) (do (shen.prompt) (do (trap-error (shen.read-evaluate-print) (lambda E (pr (error-to-string E) (stoutput)))) (shen.loop)))))
 
