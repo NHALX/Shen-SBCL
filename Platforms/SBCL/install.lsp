@@ -154,15 +154,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
 (DEFUN PATH-DIRECTORY (X)
   (DIRECTORY-NAMESTRING (PATHNAME X)))
 
-;(path-filename "jit/specification/test.kl")
-;(path-directory "jit/specification/test.kl")
-
-(DEFUN is-sbcl-arg-prefix (X) ; TODO: improve this
-  (LET ((Index (STRING< "--" X)))
-       (AND Index (= Index 2))))
 
 ;  (IN-PACKAGE :COMMON-LISP)
 ;  (QL:QUICKLOAD "cffi")
+
 (DEFUN entry-point ()
 
   (WITH-OPEN-STREAM (*STANDARD-OUTPUT* (MAKE-BROADCAST-STREAM))
@@ -177,14 +172,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  ; (ASDF:LOAD-SYSTEM :CFFI)
 
   (HANDLER-CASE
-   (shen.shen (REMOVE-IF 'is-sbcl-arg-prefix
-                         (CDR SB-EXT:*POSIX-ARGV*)))
-   (SB-SYS:INTERACTIVE-INTERRUPT ()
-        (SB-EXT:QUIT))))
+      (shen.shen (CDR SB-EXT:*POSIX-ARGV*))
+    (SB-SYS:INTERACTIVE-INTERRUPT ()
+      (SB-EXT:QUIT))))
 
 
 (SB-EXT:DISABLE-DEBUGGER)
 (SB-EXT:GC :FULL T)
 
 
-(SB-EXT:SAVE-LISP-AND-DIE "Shen.exe" :EXECUTABLE T :TOPLEVEL 'entry-point)
+(SB-EXT:SAVE-LISP-AND-DIE "Shen.exe"
+                          :EXECUTABLE T
+                          :SAVE-RUNTIME-OPTIONS T
+                          :TOPLEVEL 'entry-point)
